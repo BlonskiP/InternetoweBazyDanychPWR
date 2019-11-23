@@ -33,7 +33,7 @@ namespace TaskRegiser.Core
             var UserManager = _serviceProvider.GetRequiredService<UserManager<Employee>>();
 
            
-            string[] logins = { "Admin" };
+            string[] logins = { "Admin@TestMail.com" };
             var userExist = await UserManager.FindByNameAsync(logins[0]);
             if(userExist==null)
             {
