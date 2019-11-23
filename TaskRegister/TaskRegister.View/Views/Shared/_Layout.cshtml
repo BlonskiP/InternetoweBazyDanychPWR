@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using TaskRegiser.Core.Entities
+@using Microsoft.AspNetCore.Identity
+@using TaskRegiser.Core
+@inject SignInManager<Employee> signInManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,6 +29,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if (signInManager.IsSignedIn(User) && User.IsInRole(RolesResource.Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Manage Projects</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register a new User</a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>

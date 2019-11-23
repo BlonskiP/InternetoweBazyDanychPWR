@@ -11,7 +11,7 @@ using TaskRegiser.Core.Entities;
 
 namespace TaskRegister.View.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RolesResource.Policy.AdminOnly)]
     public class ProjectsController : Controller
     {
         private readonly AppDbContext _context;
