@@ -50,7 +50,7 @@ namespace TaskRegister.View.Controllers
         // GET: Projects/Create
         public IActionResult Create()
         {
-            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
@@ -67,7 +67,7 @@ namespace TaskRegister.View.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id", project.EmployeeFK);
+            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName", project.EmployeeFK);
             return View(project);
         }
 
@@ -84,7 +84,7 @@ namespace TaskRegister.View.Controllers
             {
                 return NotFound();
             }
-            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id", project.EmployeeFK);
+            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName", project.EmployeeFK);
             return View(project);
         }
 
@@ -120,7 +120,7 @@ namespace TaskRegister.View.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id", project.EmployeeFK);
+            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName", project.EmployeeFK);
             return View(project);
         }
 
