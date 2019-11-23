@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +17,10 @@ namespace TaskRegister.View.Controllers
     public class ProjectsController : Controller
     {
         private readonly AppDbContext _context;
-
-        public ProjectsController(AppDbContext context)
+        private readonly SignInManager<Employee> _signInManager;
+        public ProjectsController(AppDbContext context, SignInManager<Employee> signInManager)
         {
+            _signInManager = signInManager;
             _context = context;
         }
 
@@ -27,7 +30,13 @@ namespace TaskRegister.View.Controllers
             var appDbContext = _context.Projects.Include(p => p.ProjectManager);
             return View(await appDbContext.ToListAsync());
         }
-
+        [Authorize(Roles = RolesResource.Policy.AllUsers)]
+        public async Task<IActionResult> GetUserProjects()
+        {
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var appDbContext = await _context.Projects.Include(p => p.ProjectManager).Where(p => p.ProjectManager.Id == user).ToListAsync();
+            return View(appDbContext);
+        }
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
