@@ -5,11 +5,9 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskRegiser.Core", "..\TaskRegiser.Core\TaskRegiser.Core.csproj", "{A57BC99E-1894-45E6-9A24-A20CF84CC51F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskRegiser.Services", "..\TaskRegiser.Services\TaskRegiser.Services.csproj", "{AC64707C-F51F-4675-9389-C4ED4D47B03D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskRegiser.ModelView", "..\TaskRegiser.ModelView\TaskRegiser.ModelView.csproj", "{56F0C4A1-ACA2-4C7C-A237-6F88A3E70AC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskRegister.View", "TaskRegister.View\TaskRegister.View.csproj", "{CE190470-6FF6-4A4F-9D81-30D390D38388}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskRegister.View", "TaskRegister.View\TaskRegister.View.csproj", "{CE190470-6FF6-4A4F-9D81-30D390D38388}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		{A57BC99E-1894-45E6-9A24-A20CF84CC51F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A57BC99E-1894-45E6-9A24-A20CF84CC51F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A57BC99E-1894-45E6-9A24-A20CF84CC51F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC64707C-F51F-4675-9389-C4ED4D47B03D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC64707C-F51F-4675-9389-C4ED4D47B03D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC64707C-F51F-4675-9389-C4ED4D47B03D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC64707C-F51F-4675-9389-C4ED4D47B03D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{56F0C4A1-ACA2-4C7C-A237-6F88A3E70AC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{56F0C4A1-ACA2-4C7C-A237-6F88A3E70AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56F0C4A1-ACA2-4C7C-A237-6F88A3E70AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU

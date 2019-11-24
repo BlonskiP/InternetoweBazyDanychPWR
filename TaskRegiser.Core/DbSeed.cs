@@ -20,7 +20,7 @@ namespace TaskRegiser.Core
         private static async Task SeedUsersRolesAsync()
         {
             var RoleManager = _serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roleTitles = { "Admin", "Member" };
+            string[] roleTitles = { RolesResource.Admin, RolesResource.Employee };
             IdentityResult roleResult;
             foreach(var roleName in roleTitles)
             {

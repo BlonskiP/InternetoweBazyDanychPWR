@@ -20,7 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\TaskRegiser.Core\TaskRegiser.Core.csproj" />
     <ProjectReference Include="..\..\TaskRegiser.ModelView\TaskRegiser.ModelView.csproj" />
-    <ProjectReference Include="..\..\TaskRegiser.Services\TaskRegiser.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,23 +13,31 @@ using TaskRegiser.Core.Entities;
 
 namespace TaskRegister.View.Controllers
 {
-    [Authorize(Roles = RolesResource.Policy.AdminOnly)]
     public class ProjectsController : Controller
     {
         private readonly AppDbContext _context;
-
-        public ProjectsController(AppDbContext context)
+        private readonly SignInManager<Employee> _signInManager;
+        public ProjectsController(AppDbContext context, SignInManager<Employee> signInManager)
         {
+            _signInManager = signInManager;
             _context = context;
         }
 
         // GET: Projects
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Projects.Include(p => p.ProjectManager);
             return View(await appDbContext.ToListAsync());
         }
 
+        [Authorize(Roles = RolesResource.Policy.AllUsers)]
+        public async Task<IActionResult> GetUserProjects()
+        {
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var appDbContext = await _context.Projects.Include(p => p.ProjectManager).Where(p => p.ProjectManager.Id == user).ToListAsync();
+            return View(appDbContext);
+        }
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -48,9 +58,10 @@ namespace TaskRegister.View.Controllers
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public IActionResult Create()
         {
-            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
@@ -59,6 +70,7 @@ namespace TaskRegister.View.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Create([Bind("ID,Name,EmployeeFK,CreationDate")] Project project)
         {
             if (ModelState.IsValid)
@@ -67,11 +79,12 @@ namespace TaskRegister.View.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id", project.EmployeeFK);
+            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName", project.EmployeeFK);
             return View(project);
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,7 +97,7 @@ namespace TaskRegister.View.Controllers
             {
                 return NotFound();
             }
-            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id", project.EmployeeFK);
+            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName", project.EmployeeFK);
             return View(project);
         }
 
@@ -93,6 +106,7 @@ namespace TaskRegister.View.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,EmployeeFK,CreationDate")] Project project)
         {
             if (id != project.ID)
@@ -120,11 +134,12 @@ namespace TaskRegister.View.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id", project.EmployeeFK);
+            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName", project.EmployeeFK);
             return View(project);
         }
 
         // GET: Projects/Delete/5
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -144,6 +159,7 @@ namespace TaskRegister.View.Controllers
         }
 
         // POST: Projects/Delete/5
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
