@@ -1,5 +1,8 @@
 ﻿@model TaskRegiser.Core.Entities.ProjectTask
-
+@using TaskRegiser.Core.Entities
+@using Microsoft.AspNetCore.Identity
+@using TaskRegiser.Core
+@inject SignInManager<Employee> signInManager
 @{
     ViewData["Title"] = "Edit";
 }
@@ -18,36 +21,43 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Approved" /> @Html.DisplayNameFor(model => model.Approved)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateEnd" class="control-label"></label>
-                <input asp-for="DateEnd" class="form-control" />
-                <span asp-validation-for="DateEnd" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmployeeFK" class="control-label"></label>
-                <select asp-for="EmployeeFK" class="form-control" asp-items="ViewBag.EmployeeFK"></select>
-                <span asp-validation-for="EmployeeFK" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateStart" class="control-label"></label>
-                <input asp-for="DateStart" class="form-control" />
-                <span asp-validation-for="DateStart" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+            @if (signInManager.IsSignedIn(User) && User.IsInRole(RolesResource.Admin))
+            {
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="Approved" /> @Html.DisplayNameFor(model => model.Approved)
+                    </label>
+                </div>
+            }
+                <div class="form-group">
+                    <label asp-for="DateEnd" class="control-label"></label>
+                    <input asp-for="DateEnd" class="form-control" />
+                    <span asp-validation-for="DateEnd" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmployeeFK" class="control-label"></label>
+                    <select asp-for="EmployeeFK" class="form-control" asp-items="ViewBag.EmployeeFK"></select>
+                    <span asp-validation-for="EmployeeFK" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DateStart" class="control-label"></label>
+                    <input asp-for="DateStart" class="form-control" />
+                    <span asp-validation-for="DateStart" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    @if (signInManager.IsSignedIn(User) && User.IsInRole(RolesResource.Admin))
+    {
+        <a asp-action="Index">Back to List</a>
+    }
+        <a asp-action="GetTasks">Back to my List</a>
+    </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -13,7 +13,6 @@ using TaskRegiser.Core.Entities;
 
 namespace TaskRegister.View.Controllers
 {
-    [Authorize(Roles = RolesResource.Policy.AdminOnly)]
     public class ProjectsController : Controller
     {
         private readonly AppDbContext _context;
@@ -25,11 +24,13 @@ namespace TaskRegister.View.Controllers
         }
 
         // GET: Projects
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Projects.Include(p => p.ProjectManager);
             return View(await appDbContext.ToListAsync());
         }
+
         [Authorize(Roles = RolesResource.Policy.AllUsers)]
         public async Task<IActionResult> GetUserProjects()
         {
@@ -57,6 +58,7 @@ namespace TaskRegister.View.Controllers
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public IActionResult Create()
         {
             ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName");
@@ -68,6 +70,7 @@ namespace TaskRegister.View.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Create([Bind("ID,Name,EmployeeFK,CreationDate")] Project project)
         {
             if (ModelState.IsValid)
@@ -81,6 +84,7 @@ namespace TaskRegister.View.Controllers
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -102,6 +106,7 @@ namespace TaskRegister.View.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,EmployeeFK,CreationDate")] Project project)
         {
             if (id != project.ID)
@@ -134,6 +139,7 @@ namespace TaskRegister.View.Controllers
         }
 
         // GET: Projects/Delete/5
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -153,6 +159,7 @@ namespace TaskRegister.View.Controllers
         }
 
         // POST: Projects/Delete/5
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

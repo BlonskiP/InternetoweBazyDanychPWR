@@ -9,6 +9,7 @@ namespace TaskRegiser.Core
         
         public const string Admin = "Admin";
         public const string Employee = "Member";
+        public static readonly List<string> RoleList =  new List<string>{ Admin, Employee };
         public static class Policy
         {
             public const string AdminOnly = Admin;

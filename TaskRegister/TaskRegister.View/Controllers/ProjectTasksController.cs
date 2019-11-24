@@ -12,7 +12,7 @@ using TaskRegiser.Core.Entities;
 
 namespace TaskRegister.View.Controllers
 {
-    [Authorize(Roles = RolesResource.Policy.AdminOnly)]
+    [Authorize(Roles = RolesResource.Policy.AllUsers)]
     public class ProjectTasksController : Controller
     {
         private readonly AppDbContext _context;
@@ -21,7 +21,7 @@ namespace TaskRegister.View.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         // GET: ProjectTasks
         public async Task<IActionResult> Index()
         {
@@ -35,6 +35,7 @@ namespace TaskRegister.View.Controllers
             var appDbContext = await _context.ProjectTasks.Include(p => p.Employee).Where(p=> p.Employee.Id==user).ToListAsync();
             return View(appDbContext);
         }
+
         // GET: ProjectTasks/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -55,6 +56,7 @@ namespace TaskRegister.View.Controllers
         }
 
         // GET: ProjectTasks/Create
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public IActionResult Create()
         {
             ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName");
@@ -73,6 +75,7 @@ namespace TaskRegister.View.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RolesResource.Policy.AdminOnly)]
         public async Task<IActionResult> Create([Bind("ID,Name,Approved,DateEnd,EmployeeFK,DateStart")] ProjectTask projectTask)
         {
             if (ModelState.IsValid)
@@ -100,6 +103,7 @@ namespace TaskRegister.View.Controllers
         }
 
         // GET: ProjectTasks/Edit/5
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -146,7 +150,7 @@ namespace TaskRegister.View.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(GetTasks));
             }
             ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id", projectTask.EmployeeFK);
             return View(projectTask);
