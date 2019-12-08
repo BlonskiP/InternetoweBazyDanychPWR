@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.project)
+                @Html.DisplayNameFor(model => model.project.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Approved)
@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.DateEnd)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Employee)
+                @Html.DisplayNameFor(model => model.Employee.UserName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DateStart)
@@ -49,7 +49,7 @@
                 @Html.DisplayFor(modelItem => item.DateEnd)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Employee.Id)
+                @Html.DisplayFor(modelItem => item.Employee.UserName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateStart)
