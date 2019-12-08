@@ -14,6 +14,7 @@ namespace TaskRegiser.Core.Entities
         public string Name { get; set; }
         [ForeignKey("EmployeeFK")]
         public Employee ProjectManager { get; set; }
+        [Required]
         public string EmployeeFK { get; set; }
         public DateTime CreationDate { get; set; }
 

@@ -10,8 +10,8 @@ using TaskRegiser.Core;
 namespace TaskRegiser.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191114193139_test2")]
-    partial class test2
+    [Migration("20191208132419_requiredFields")]
+    partial class requiredFields
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -228,6 +228,7 @@ namespace TaskRegiser.Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EmployeeFK")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
@@ -258,20 +259,22 @@ namespace TaskRegiser.Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EmployeeFK")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
-                    b.Property<int?>("Project")
+                    b.Property<int>("ProjectFK")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("EmployeeFK");
 
-                    b.HasIndex("Project");
+                    b.HasIndex("ProjectFK");
 
                     b.ToTable("ProjectTasks");
                 });
@@ -331,18 +334,24 @@ namespace TaskRegiser.Core.Migrations
                 {
                     b.HasOne("TaskRegiser.Core.Entities.Employee", "ProjectManager")
                         .WithMany()
-                        .HasForeignKey("EmployeeFK");
+                        .HasForeignKey("EmployeeFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TaskRegiser.Core.Entities.ProjectTask", b =>
                 {
                     b.HasOne("TaskRegiser.Core.Entities.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeFK");
+                        .HasForeignKey("EmployeeFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TaskRegiser.Core.Entities.Project", "project")
                         .WithMany()
-                        .HasForeignKey("Project");
+                        .HasForeignKey("ProjectFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

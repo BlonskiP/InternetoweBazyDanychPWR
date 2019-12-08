@@ -25,16 +25,17 @@ namespace TaskRegister.View.Controllers
         // GET: ProjectTasks
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.ProjectTasks.Include(p => p.Employee);
+            var appDbContext = _context.ProjectTasks.Include(p => p.Employee).Include(p => p.project);
             return View(await appDbContext.ToListAsync());
         }
         [Authorize(Roles = RolesResource.Policy.AllUsers)]
         public async Task<IActionResult> GetTasks()
         {
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var appDbContext = await _context.ProjectTasks.Include(p => p.Employee).Where(p=> p.Employee.Id==user).ToListAsync();
+            var appDbContext = await _context.ProjectTasks.Include(p => p.Employee).Where(p => p.Employee.Id == user).Include(p => p.project).ToListAsync();
             return View(appDbContext);
         }
+
 
         // GET: ProjectTasks/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -46,6 +47,7 @@ namespace TaskRegister.View.Controllers
 
             var projectTask = await _context.ProjectTasks
                 .Include(p => p.Employee)
+                .Include(p => p.project)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (projectTask == null)
             {
@@ -60,13 +62,13 @@ namespace TaskRegister.View.Controllers
         public IActionResult Create()
         {
             ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName");
+            ViewData["ProjectFK"] = new SelectList(_context.Projects, "ID", "Name");
             return View();
         }
         [Authorize(Roles = RolesResource.Policy.AllUsers)]
         public IActionResult CreateEmployeeTask()
         {
-            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            ViewData["EmployeeFK"] = new SelectList(_context.Users.Where(u=>u.Id==user).ToList(), "Id", "UserName");
+            ViewData["ProjectFK"] = new SelectList(_context.Projects, "ID", "Name");
             return View();
         }
 
@@ -76,7 +78,7 @@ namespace TaskRegister.View.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RolesResource.Policy.AdminOnly)]
-        public async Task<IActionResult> Create([Bind("ID,Name,Approved,DateEnd,EmployeeFK,DateStart")] ProjectTask projectTask)
+        public async Task<IActionResult> Create([Bind("ID,Name,Approved,DateEnd,EmployeeFK,ProjectFK,DateStart")] ProjectTask projectTask)
         {
             if (ModelState.IsValid)
             {
@@ -85,25 +87,33 @@ namespace TaskRegister.View.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id", projectTask.EmployeeFK);
+            ViewData["ProjectFK"] = new SelectList(_context.Projects, "ID", "Name", projectTask.ProjectFK);
             return View(projectTask);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RolesResource.Policy.AllUsers)]
-        public async Task<IActionResult> CreateEmployeeTask([Bind("ID,Name,Approved,DateEnd,EmployeeFK,DateStart")] ProjectTask projectTask)
+        public async Task<IActionResult> CreateEmployeeTask([Bind("ID,Name,Approved,DateEnd,ProjectFK,DateStart")] ProjectTask projectTask)
         {
-            if (ModelState.IsValid)
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            projectTask.EmployeeFK = user;
+            projectTask.Employee = _context.Users.Where(us => us.Id == user).First();
+            projectTask.project = _context.Projects.Where(pro => pro.ID == projectTask.ProjectFK).First();
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            ModelState.Clear();
+            var modelValidation = TryValidateModel(projectTask, nameof(ProjectTask));
+            if (modelValidation)
             {
                 _context.Add(projectTask);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(GetTasks));
             }
             ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName", projectTask.EmployeeFK);
+            ViewData["ProjectFK"] = new SelectList(_context.Projects, "ID", "Name", projectTask.ProjectFK);
             return View(projectTask);
         }
 
         // GET: ProjectTasks/Edit/5
-
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -117,6 +127,7 @@ namespace TaskRegister.View.Controllers
                 return NotFound();
             }
             ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName", projectTask.EmployeeFK);
+            ViewData["ProjectFK"] = new SelectList(_context.Projects, "ID", "Name", projectTask.ProjectFK);
             return View(projectTask);
         }
 
@@ -125,7 +136,7 @@ namespace TaskRegister.View.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Approved,DateEnd,EmployeeFK,DateStart")] ProjectTask projectTask)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Approved,DateEnd,EmployeeFK,ProjectFK,DateStart")] ProjectTask projectTask)
         {
             if (id != projectTask.ID)
             {
@@ -152,7 +163,8 @@ namespace TaskRegister.View.Controllers
                 }
                 return RedirectToAction(nameof(GetTasks));
             }
-            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "Id", projectTask.EmployeeFK);
+            ViewData["EmployeeFK"] = new SelectList(_context.Users, "Id", "UserName", projectTask.EmployeeFK);
+            ViewData["ProjectFK"] = new SelectList(_context.Projects, "ID", "Name", projectTask.ProjectFK);
             return View(projectTask);
         }
 
@@ -166,6 +178,7 @@ namespace TaskRegister.View.Controllers
 
             var projectTask = await _context.ProjectTasks
                 .Include(p => p.Employee)
+                .Include(p => p.project)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (projectTask == null)
             {

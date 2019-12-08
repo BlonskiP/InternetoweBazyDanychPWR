@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TaskRegiser.Core.Migrations
 {
-    public partial class test : Migration
+    public partial class requiredFields : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -92,8 +92,8 @@ namespace TaskRegiser.Core.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -137,8 +137,8 @@ namespace TaskRegiser.Core.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -159,7 +159,7 @@ namespace TaskRegiser.Core.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(maxLength: 50, nullable: true),
-                    EmployeeFK = table.Column<string>(nullable: true),
+                    EmployeeFK = table.Column<string>(nullable: false),
                     CreationDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -170,7 +170,7 @@ namespace TaskRegiser.Core.Migrations
                         column: x => x.EmployeeFK,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,11 +179,11 @@ namespace TaskRegiser.Core.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(maxLength: 20, nullable: true),
-                    Project = table.Column<int>(nullable: true),
+                    Name = table.Column<string>(maxLength: 20, nullable: false),
                     Approved = table.Column<bool>(nullable: false),
                     DateEnd = table.Column<DateTime>(nullable: false),
-                    EmployeeFK = table.Column<string>(nullable: true),
+                    EmployeeFK = table.Column<string>(nullable: false),
+                    ProjectFK = table.Column<int>(nullable: false),
                     DateStart = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -194,13 +194,13 @@ namespace TaskRegiser.Core.Migrations
                         column: x => x.EmployeeFK,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_ProjectTasks_Projects_Project",
-                        column: x => x.Project,
+                        name: "FK_ProjectTasks_Projects_ProjectFK",
+                        column: x => x.ProjectFK,
                         principalTable: "Projects",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -253,9 +253,9 @@ namespace TaskRegiser.Core.Migrations
                 column: "EmployeeFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectTasks_Project",
+                name: "IX_ProjectTasks_ProjectFK",
                 table: "ProjectTasks",
-                column: "Project");
+                column: "ProjectFK");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

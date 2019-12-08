@@ -11,14 +11,20 @@ namespace TaskRegiser.Core.Entities
         [Key]
         public int ID{get;set;}
         [MaxLength(20)]
+        [Required]
         public string Name { get; set; }
-        [ForeignKey("Project")]
+        [ForeignKey("ProjectFK")]
+        [Required]
         public Project project { get; set; }
         public bool Approved { get; set; }
         public DateTime DateEnd { get; set; }
         [ForeignKey("EmployeeFK")]
+        [Required]
         public Employee Employee { get; set; }
         public string EmployeeFK { get; set; }
+        [Required]
+        public int ProjectFK { get; set; }
+        [Required]
         public DateTime DateStart { get; set; }
     }
 }

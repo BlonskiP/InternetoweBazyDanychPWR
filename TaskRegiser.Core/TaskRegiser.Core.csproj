@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20191113000100_test.cs" />
+    <Compile Remove="Migrations\20191113000100_test.Designer.cs" />
+    <Compile Remove="Migrations\20191114193139_test2.cs" />
+    <Compile Remove="Migrations\20191114193139_test2.Designer.cs" />
+    <Compile Remove="Migrations\20191208131022_requiredFields.cs" />
+    <Compile Remove="Migrations\20191208131022_requiredFields.Designer.cs" />
+    <Compile Remove="Migrations\20191208131225_requiredFields.cs" />
+    <Compile Remove="Migrations\20191208131225_requiredFields.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
