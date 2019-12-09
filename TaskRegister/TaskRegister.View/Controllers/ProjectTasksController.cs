@@ -35,8 +35,6 @@ namespace TaskRegister.View.Controllers
             var appDbContext = await _context.ProjectTasks.Include(p => p.Employee).Where(p => p.Employee.Id == user).Include(p => p.project).ToListAsync();
             return View(appDbContext);
         }
-
-
         // GET: ProjectTasks/Details/5
         public async Task<IActionResult> Details(int? id)
         {
